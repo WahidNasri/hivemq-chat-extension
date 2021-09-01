@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+        <typeAlias alias = "user" type = "com.db.User"/>
+        <typeAlias alias = "session" type = "com.db.Session"/>
+        <typeAlias alias = "message" type = "com.db.Message"/>
+        <typeAlias alias = "contactChat" type = "com.db.ContactChat"/>
+    </typeAliases>
+
+    <environments default="dev">
+        <environment id="dev">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/chat"/>
+                <property name="username" value="dev"/>
+                <property name="password" value="dev"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper class="com.db.UserMapper"/>
+        <mapper class="com.db.SessionMapper"/>
+        <mapper class="com.db.MessageMapper"/>
+        <mapper class="com.db.RoomMapper"/>
+    </mappers>
+</configuration>

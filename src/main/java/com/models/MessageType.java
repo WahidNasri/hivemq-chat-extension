@@ -1,0 +1,41 @@
+package com.models;
+
+import com.google.gson.annotations.SerializedName;
+
+public enum MessageType {
+    @SerializedName("ChatText")
+    ChatText,
+
+    @SerializedName("ChatImage")
+    ChatImage,
+
+    @SerializedName("ChatVideo")
+    ChatVideo,
+
+    @SerializedName("ChatAudio")
+    ChatAudio,
+
+    @SerializedName("ChatDocument")
+    ChatDocument,
+
+    @SerializedName("ChatLocation")
+    ChatLocation,
+
+    @SerializedName("ChatContact")
+    ChatContact,
+
+    @SerializedName("EventInvitationRequest")
+    EventInvitationRequest,
+
+    @SerializedName("EventInvitationResponse")
+    EventInvitationResponse,
+
+    @SerializedName("Presence")
+    Presence,
+
+    @SerializedName("ChatMarker")
+    ChatMarker,
+
+    @SerializedName("Typing")
+    Typing
+}
