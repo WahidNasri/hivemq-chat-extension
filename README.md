@@ -24,3 +24,10 @@ Those information are published by a special user (called supreme user), he is r
 | events/[room id]      | User that exists and member of the room      |   User that exists and member of the room. for chat marker, the message owner cannot publish |
 | presence/[user id] | Check if the specified user id is a contact of the subscription requester      |    only the owner of the specified id |
 |personalevents/[user id] | only the owner of the specified user id | For invitation, only authorize if there is no ongoing invitation (in progress)
+
+
+## Database schema
+You can find a simple schema for the database [here](chat.sql)
+
+## Client Example
+Here is a simple [Flutter client](https://github.com/WahidNasri/flutter-mqtt-chat-client).
