@@ -13,11 +13,11 @@ To define Database information, please edit the file [mybatis-config.xml](src/ma
 
 To change the way the users log in, implement your logic inside [MyAuthenticationProvider.java](src/main/java/com/chat/authorizers/authentication/MyAuthenticatorProvider.java).
 
-##The Supreme User
+## The Supreme User
 After a successful login, the user will need some information from the server (Like list of contacts and groups, his profile, messages archives if implemented). 
 Those information are published by a special user (called supreme user), he is responsible to send retained messages to specific topics.
 
-##Topics
+## Topics
 | topic         | Who can subscribe           | Who can publish  |
 | :------------- |:-------------:| :-----:|
 | messages/[room id]      | User that exists and member of the room | User that exists and member of the room |
