@@ -14,8 +14,6 @@ import com.hivemq.extension.sdk.api.packets.publish.PublishPacket;
 import com.utils.JsonParser;
 import com.chat.authorizers.BaseChatAuthorize;
 import com.chat.authorizers.Result;
-import org.example.authorizers.pubsub.publishAuthorizers.*;
-import org.example.authorizers.pubsub.subscribeAuthorizers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

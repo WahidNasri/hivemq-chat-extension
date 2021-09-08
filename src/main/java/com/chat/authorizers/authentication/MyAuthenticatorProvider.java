@@ -24,38 +24,45 @@ public class MyAuthenticatorProvider implements AuthenticatorProvider {
     public @Nullable Authenticator getAuthenticator(@NotNull AuthenticatorProviderInput authenticatorProviderInput) {
 
         return (SimpleAuthenticator) (simpleAuthInput, simpleAuthOutput) -> {
-            //get the contents of the MQTT connect packet from the input object
-            ConnectPacket connect = simpleAuthInput.getConnectPacket();
-            String clientId = connect.getClientId();
+            try {
+                //get the contents of the MQTT connect packet from the input object
+                ConnectPacket connect = simpleAuthInput.getConnectPacket();
+                String clientId = connect.getClientId();
 
-            BaseConnectAuthorizer authorizer = null;
+                BaseConnectAuthorizer authorizer = null;
 
-            //authorize the supreme user
-            if(clientId.startsWith("supreme_")){
-               authorizer = new SupremeAuthorizer(null, null, clientId);
-            }
-            //check if the client set username and password
-            else if (!connect.getUserName().isPresent() || !connect.getPassword().isPresent()) {
-                authorizer = new AnonymousAuthorizer(null, null, clientId);
-            }
-            else{
-                //get username and password from the connect packet
-                String username = connect.getUserName().get();
-                String password = StandardCharsets.UTF_8.decode(connect.getPassword().get()).toString();
+                //authorize the supreme user
+                if (clientId.startsWith("supreme_")) {
+                    authorizer = new SupremeAuthorizer(null, null, clientId);
+                }
+                //check if the client set username and password
+                else if (!connect.getUserName().isPresent() || !connect.getPassword().isPresent()) {
+                    authorizer = new AnonymousAuthorizer(null, null, clientId);
+                } else {
+                    //get username and password from the connect packet
+                    String username = connect.getUserName().get();
+                    String password = StandardCharsets.UTF_8.decode(connect.getPassword().get()).toString();
 
-                authorizer = new LoginAuthorizer(username, password, clientId);
-            }
+                    authorizer = new LoginAuthorizer(username, password, clientId);
+                }
 
-            Result result = authorizer.authorize();
-            switch (result){
-                case AUTHORIZE:
-                    simpleAuthOutput.authenticateSuccessfully();
-                    break;
-                case REJECT:
-                    simpleAuthOutput.failAuthentication();
-                case NEXT:
-                    simpleAuthOutput.nextExtensionOrDefault();
-                    break;
+                Result result = authorizer.authorize();
+                if(result == Result.AUTHORIZE){
+                    //when authorized, send retained messages to archives topics (rooms, user id..)
+
+                }
+                switch (result) {
+                    case AUTHORIZE:
+                        simpleAuthOutput.authenticateSuccessfully();
+                        break;
+                    case REJECT:
+                        simpleAuthOutput.failAuthentication();
+                    case NEXT:
+                        simpleAuthOutput.nextExtensionOrDefault();
+                        break;
+                }
+            }catch (Exception e){
+                log.info(e.getMessage());
             }
         };
     }

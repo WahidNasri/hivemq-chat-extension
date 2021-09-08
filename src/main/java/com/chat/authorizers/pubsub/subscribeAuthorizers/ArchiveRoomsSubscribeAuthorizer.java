@@ -17,21 +17,6 @@ public class ArchiveRoomsSubscribeAuthorizer extends BaseChatAuthorize {
     public Result authorize() {
         String foundClientId = topic.split("/")[1];
         if (foundClientId.equals(clientId)) {
-            Thread publish = new Thread(() -> {
-                //fetch groups and contacts then publish them to the topic
-                //*
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //*/
-                List<ContactChat> chats = MyBatis.getUserContacts(userId);
-                String payload = JsonParser.toJson(chats);
-
-                ChatClient.connectAndPublish(payload, topic);
-            });
-            publish.start();
             return Result.AUTHORIZE;
         } else {
             return Result.REJECT;
