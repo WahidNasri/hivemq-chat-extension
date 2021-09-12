@@ -99,7 +99,7 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
                 authorizer = new ArchivePublishAuthorizer(topic, clientId, userId);
             }
             //====== Handle messages/ topic, only room members can publish=====/
-            else if (publishPacket.getTopic().toLowerCase().startsWith("messages/")) {
+            else if (publishPacket.getTopic().toLowerCase().startsWith("messages/") || publishPacket.getTopic().toLowerCase().startsWith("filemessages/")) {
                 authorizer = new MessagesPublishAuthorizer(topic, clientId, userId);
             }
 

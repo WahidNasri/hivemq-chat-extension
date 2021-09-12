@@ -9,7 +9,10 @@ public class ChatMessage extends BaseMessage {
     private String thumbnail;
     private String originalId;
     private String originalMessage;
+    private String roomId;
     private MessageOriginality originality;
+    private long size;
+    private String mime;
 
     public String getToId() {
         return toId;
@@ -73,5 +76,29 @@ public class ChatMessage extends BaseMessage {
 
     public MessageOriginality getOriginality() {
         return originality;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public String getMime() {
+        return mime;
+    }
+
+    public void setMime(String mime) {
+        this.mime = mime;
     }
 }

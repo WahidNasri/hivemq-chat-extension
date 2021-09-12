@@ -1,6 +1,6 @@
-##This Extension defines the topic rules and the messages formats to use HiveMQ as a chat server.
+## This Extension defines the topic rules and the messages formats to use HiveMQ as a chat server.
 
-##Features:
+## Features:
 - Login
 - Get Contacts
 - Join a conversation room
@@ -21,6 +21,7 @@ Those information are published by a special user (called supreme user), he is r
 | topic         | Who can subscribe           | Who can publish  |
 | :------------- |:-------------:| :-----:|
 | messages/[room id]      | User that exists and member of the room | User that exists and member of the room |
+|filemessages/[room id | User that exists and member of the room | User that exists and member of the room |
 | events/[room id]      | User that exists and member of the room      |   User that exists and member of the room. for chat marker, the message owner cannot publish |
 | presence/[user id] | Check if the specified user id is a contact of the subscription requester      |    only the owner of the specified id |
 |personalevents/[user id] | only the owner of the specified user id | For invitation, only authorize if there is no ongoing invitation (in progress)

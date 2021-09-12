@@ -18,6 +18,8 @@
 package com.chat.interceptors;
 
 import com.db.MyBatis;
+import com.db.User;
+import com.files.FileSaver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
@@ -25,15 +27,21 @@ import com.hivemq.extension.sdk.api.interceptor.publish.PublishInboundIntercepto
 import com.hivemq.extension.sdk.api.interceptor.publish.parameter.PublishInboundInput;
 import com.hivemq.extension.sdk.api.interceptor.publish.parameter.PublishInboundOutput;
 import com.hivemq.extension.sdk.api.packets.publish.ModifiablePublishPacket;
+import com.models.ChatMessage;
+import com.models.MessageOriginality;
+import com.models.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.utils.JsonParser;
 
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class HelloWorldInterceptor implements PublishInboundInterceptor {
@@ -43,6 +51,7 @@ public class HelloWorldInterceptor implements PublishInboundInterceptor {
     public void onInboundPublish(final @NotNull PublishInboundInput publishInboundInput, final @NotNull PublishInboundOutput publishInboundOutput) {
         final ModifiablePublishPacket publishPacket = publishInboundOutput.getPublishPacket();
 
+        String topic = publishPacket.getTopic();
         String clientID = publishInboundInput.getClientInformation().getClientId();
         String payload = JsonParser.byteBufferToString(publishPacket.getPayload().get().asReadOnlyBuffer(), StandardCharsets.UTF_8);
 
@@ -50,28 +59,47 @@ public class HelloWorldInterceptor implements PublishInboundInterceptor {
         if(clientID.startsWith("supreme_")){
             return;
         }
-        try {
-            Type tp = new TypeToken<Map<String, String>>() {}.getType();
-            Map<String, String> map = new Gson().fromJson(payload, tp);
+        if(topic.toLowerCase().startsWith("messages/") || topic.toLowerCase().startsWith("events/")) {
+            try {
+                Type tp = new TypeToken<Map<String, String>>() {
+                }.getType();
+                Map<String, String> map = new Gson().fromJson(payload, tp);
 
-            //add sendTime if not present
-            long now = Instant.now().toEpochMilli();
-            map.computeIfAbsent("sendTime", k -> String.valueOf(now));
-            map.computeIfAbsent("roomId", k -> publishPacket.getTopic().split("/")[1
-                    ]);//TODO: decide force topic or not
+                //add sendTime if not present
+                long now = Instant.now().toEpochMilli();
+                map.computeIfAbsent("sendTime", k -> String.valueOf(now));
+                map.computeIfAbsent("roomId", k -> topic.split("/")[1
+                        ]);//TODO: decide force topic or not
 
-            //set the fromId, to not let anyone claim that he is another person
-            String userId = MyBatis.getUserIdBySessionId(clientID);
-            if (userId != null) {
-                map.put("fromId", userId);
+                //set the fromId, to not let anyone claim that he is another person
+                String userId = MyBatis.getUserIdBySessionId(clientID);
+                if (userId != null) {
+                    map.put("fromId", userId);
+                }
+
+                //tempered payload
+                String tempered = new Gson().toJson(map);
+                publishPacket.setPayload(ByteBuffer.wrap(tempered.getBytes(StandardCharsets.UTF_8)));
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
+        else if(topic.toLowerCase().startsWith("filemessages/")){
+            String room = topic.split("/")[1];
+            try {
+                String userId = MyBatis.getUserIdBySessionId(clientID);
 
-            //tempered payload
-            String tempered = new Gson().toJson(map);
-            publishPacket.setPayload(ByteBuffer.wrap(tempered.getBytes(StandardCharsets.UTF_8)));
+                ChatMessage msg =  FileSaver.saveAndGetMessageObject(payload, room, userId);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                String newp = JsonParser.toJson(msg);
+
+                publishPacket.setPayload(ByteBuffer.wrap(newp.getBytes(StandardCharsets.UTF_8)));
+                publishPacket.setTopic("messages/" + room);
+            }catch (Exception ee){
+                ee.printStackTrace();
+            }
         }
     }
 
