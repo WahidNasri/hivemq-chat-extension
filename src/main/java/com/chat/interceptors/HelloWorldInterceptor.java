@@ -17,6 +17,7 @@
 
 package com.chat.interceptors;
 
+import com.db.Message;
 import com.db.MyBatis;
 import com.db.User;
 import com.files.FileSaver;
@@ -81,7 +82,10 @@ public class HelloWorldInterceptor implements PublishInboundInterceptor {
                 String tempered = new Gson().toJson(map);
                 publishPacket.setPayload(ByteBuffer.wrap(tempered.getBytes(StandardCharsets.UTF_8)));
 
-
+                if(topic.toLowerCase().startsWith("messages/")){
+                    Message msg = Message.fromClientMap(map);
+                    MyBatis.insertMessage(msg);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

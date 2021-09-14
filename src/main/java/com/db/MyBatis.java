@@ -1,5 +1,6 @@
 package com.db;
 
+import com.models.ChatMessage;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -101,6 +102,16 @@ public class MyBatis {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    public static void insertMessage(Message message){
+        try(SqlSession sqlSession = getSession().openSession()){
+            MessageMapper mapper = sqlSession.getMapper(MessageMapper.class);
+            mapper.insertMessage(message);
+
+            sqlSession.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
