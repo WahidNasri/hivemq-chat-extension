@@ -1,6 +1,8 @@
 package com.client;
 
 import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3BlockingClient;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 
@@ -12,7 +14,7 @@ public class ChatClient {
     }
     public static void connectAndPublish(String payload, String topic, boolean retain){
         try {
-            final Mqtt5BlockingClient client = Mqtt5Client.builder()
+            final Mqtt3BlockingClient client = Mqtt3Client.builder()
                     .identifier("supreme_" + UUID.randomUUID().toString())
                     .serverHost("localhost")
                     .buildBlocking();

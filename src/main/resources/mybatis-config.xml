@@ -9,6 +9,8 @@
         <typeAlias alias = "session" type = "com.db.Session"/>
         <typeAlias alias = "message" type = "com.db.Message"/>
         <typeAlias alias = "contactChat" type = "com.db.ContactChat"/>
+        <typeAlias alias = "invitation" type = "com.db.Invitation"/>
+        <typeAlias alias = "room" type = "com.db.Room"/>
     </typeAliases>
 
     <environments default="dev">
@@ -28,5 +30,6 @@
         <mapper class="com.db.SessionMapper"/>
         <mapper class="com.db.MessageMapper"/>
         <mapper class="com.db.RoomMapper"/>
+        <mapper class="com.db.InvitationMapper"/>
     </mappers>
 </configuration>

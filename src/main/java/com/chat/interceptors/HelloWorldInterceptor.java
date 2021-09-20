@@ -17,6 +17,7 @@
 
 package com.chat.interceptors;
 
+import com.db.ContactChat;
 import com.db.Message;
 import com.db.MyBatis;
 import com.db.User;
@@ -57,10 +58,10 @@ public class HelloWorldInterceptor implements PublishInboundInterceptor {
         String payload = JsonParser.byteBufferToString(publishPacket.getPayload().get().asReadOnlyBuffer(), StandardCharsets.UTF_8);
 
         //do not intercept supreme user messages
-        if(clientID.startsWith("supreme_")){
+        if (clientID.startsWith("supreme_")) {
             return;
         }
-        if(topic.toLowerCase().startsWith("messages/") || topic.toLowerCase().startsWith("events/")) {
+        if (topic.toLowerCase().startsWith("messages/") || topic.toLowerCase().startsWith("events/")) {
             try {
                 Type tp = new TypeToken<Map<String, String>>() {
                 }.getType();
@@ -82,27 +83,41 @@ public class HelloWorldInterceptor implements PublishInboundInterceptor {
                 String tempered = new Gson().toJson(map);
                 publishPacket.setPayload(ByteBuffer.wrap(tempered.getBytes(StandardCharsets.UTF_8)));
 
-                if(topic.toLowerCase().startsWith("messages/")){
+                if (topic.toLowerCase().startsWith("messages/")) {
                     Message msg = Message.fromClientMap(map);
                     MyBatis.insertMessage(msg);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else if(topic.toLowerCase().startsWith("filemessages/")){
+        } else if (topic.toLowerCase().startsWith("filemessages/")) {
             String room = topic.split("/")[1];
             try {
                 String userId = MyBatis.getUserIdBySessionId(clientID);
 
-                ChatMessage msg =  FileSaver.saveAndGetMessageObject(payload, room, userId);
+                ChatMessage msg = FileSaver.saveAndGetMessageObject(payload, room, userId);
 
                 String newp = JsonParser.toJson(msg);
 
                 publishPacket.setPayload(ByteBuffer.wrap(newp.getBytes(StandardCharsets.UTF_8)));
                 publishPacket.setTopic("messages/" + room);
-            }catch (Exception ee){
+            } catch (Exception ee) {
                 ee.printStackTrace();
+            }
+        } else if (topic.toLowerCase().startsWith("personalevents/") || topic.toLowerCase().startsWith("invitations/")) {
+            try {
+                Type tp = new TypeToken<Map<String, String>>() {
+                }.getType();
+                Map<String, String> map = new Gson().fromJson(payload, tp);
+                String userId = MyBatis.getUserIdBySessionId(clientID);
+                ContactChat user = MyBatis.getUserByID(userId);
+                map.put("fromName", user.getFirstName() + " " + user.getLastName());
+                map.put("fromAvatar", user.getAvatar());
+                map.put("fromId", userId);
+                String tempered = new Gson().toJson(map);
+                publishPacket.setPayload(ByteBuffer.wrap(tempered.getBytes(StandardCharsets.UTF_8)));
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
     }

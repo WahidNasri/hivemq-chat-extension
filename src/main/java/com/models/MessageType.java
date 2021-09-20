@@ -27,8 +27,11 @@ public enum MessageType {
     @SerializedName("EventInvitationRequest")
     EventInvitationRequest,
 
-    @SerializedName("EventInvitationResponse")
-    EventInvitationResponse,
+    @SerializedName("EventInvitationResponseAccept")
+    EventInvitationResponseAccept,
+
+    @SerializedName("EventInvitationResponseReject")
+    EventInvitationResponseReject,
 
     @SerializedName("Presence")
     Presence,

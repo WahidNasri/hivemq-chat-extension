@@ -39,4 +39,7 @@ public interface UserMapper {
 
     @Select("SELECT id, first_name firstName, last_name lastName, avatar FROM user where id = #{userId}")
     ContactChat getUserById(@Param("userId") String userId);
+
+    @Select("SELECT id FROM user WHERE email = #{username}")
+    String getUserIDByUserName(@Param("username") String username);
 }

@@ -54,7 +54,11 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
             else if (topicFilter.toLowerCase().startsWith("presence/")) {
                 authorizer = new PresenceSubscribeAuthorizer(topicFilter, clientId, userId);
             }
-            //=== TODO: Handle personalevents/<ID>
+            else if(topicFilter.toLowerCase().startsWith("personalevents/")){
+                //=== TODO: Handle personalevents/<ID>
+
+                authorizer = new JustAllowAuthorizer(topicFilter, clientId, userId);
+            }
 
             if(authorizer != null) {
                 Result result = authorizer.authorize();
@@ -64,8 +68,10 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
                         break;
                     case REJECT:
                         output.failAuthorization();
+                        break;
                     case NEXT:
-                        output.nextExtensionOrDefault();
+                        //output.nextExtensionOrDefault();
+                        break;
                 }
             }
         }catch (Exception e){
@@ -112,7 +118,15 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
             else if (publishPacket.getTopic().toLowerCase().startsWith("presence/")) {
                 authorizer = new PresencePublishAuthorizer(topic, clientId, userId);
             }
-            //==== TODO: Handle personalevents/ topic, if invitation check there is no ingoing invitation
+
+            //====== Handle invitations/ topic, authorize logged in users and only if there is no ingoing invitation
+            else if(publishPacket.getTopic().toLowerCase().startsWith("invitations/")){
+                authorizer = new InvitationPublishAuthorizer(topic, clientId, userId, payload);
+            }
+            else if(topic.startsWith("personalevents/")){
+                authorizer = new PersonalEventsPublishAuthorizer(topic, clientId, userId, payload);
+
+            }
 
             if(authorizer != null){
                 Result result = authorizer.authorize();
@@ -122,16 +136,17 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
                         break;
                     case REJECT:
                         output.failAuthorization();
+                        break;
                     case NEXT:
-                        output.nextExtensionOrDefault();
+                        //output.nextExtensionOrDefault();
+                        break;
                 }
             }
             else {
-                output.nextExtensionOrDefault();
+                //output.nextExtensionOrDefault();
             }
         }catch (Exception e){
-            log.info("XXXX");
-            log.info(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

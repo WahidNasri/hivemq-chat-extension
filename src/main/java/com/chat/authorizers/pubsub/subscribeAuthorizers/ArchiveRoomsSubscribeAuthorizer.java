@@ -16,7 +16,7 @@ public class ArchiveRoomsSubscribeAuthorizer extends BaseChatAuthorize {
 
     public Result authorize() {
         String foundClientId = topic.split("/")[1];
-        if (foundClientId.equals(clientId)) {
+        if (foundClientId.equals(clientId) || userId.equals(foundClientId)) {
             return Result.AUTHORIZE;
         } else {
             return Result.REJECT;
