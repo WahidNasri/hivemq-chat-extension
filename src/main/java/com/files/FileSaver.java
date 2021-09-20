@@ -17,12 +17,17 @@ public class FileSaver {
     public static ChatMessage saveAndGetMessageObject(String base64File, String room, String userId){
         String id = UUID.randomUUID().toString();
 
+        String fileName = "File";
         try {
             String partSeparator = ",";
+            //Example: data:image/png;base64,<encoded content>,<filename>
             if(base64File.contains(partSeparator)){
-                String encodedImage = base64File.split(partSeparator)[1];
-                String mime = base64File.split(partSeparator)[0].split(";")[0].split(":")[1];
+                String[] parts = base64File.split(partSeparator);
+                String encodedImage = parts[1];
+                String mime = parts[0].split(";")[0].split(":")[1];
                 byte[] decodedImage = Base64.getDecoder().decode(encodedImage.getBytes(StandardCharsets.UTF_8));
+
+                fileName = parts.length >= 3 ? parts[2] : "File";
 
                 File fldr = new File("C:/xampp/htdocs/dashboard/");
                 if(!fldr.exists()){
@@ -59,7 +64,7 @@ public class FileSaver {
                 msg.setThumbnail(prevUrl);
                 msg.setRoomId(room);
                 msg.setOriginality(MessageOriginality.Original);
-                msg.setText("File");
+                msg.setText(fileName);
                 msg.setSize(dest.length());
 
                 msg.setMime(mime);
@@ -88,7 +93,7 @@ public class FileSaver {
         else if(mime.contains("audio/")){
             return MessageType.ChatAudio;
         }
-        else return MessageType.ChatText;
+        else return MessageType.ChatDocument ;
     }
     static String getExtensionFromMime(String mime){
         mime = mime.toLowerCase();
