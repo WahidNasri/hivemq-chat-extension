@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 08, 2021 at 09:52 AM
+-- Generation Time: Sep 22, 2021 at 11:53 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -24,6 +24,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `invitation`
+--
+
+CREATE TABLE `invitation` (
+  `id` varchar(250) NOT NULL,
+  `from_id` varchar(250) NOT NULL,
+  `to_id` varchar(250) NOT NULL,
+  `sent_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `state` varchar(250) NOT NULL DEFAULT 'ingoing'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `message`
 --
 
@@ -31,12 +45,12 @@ CREATE TABLE `message` (
   `id` varchar(250) NOT NULL,
   `type` varchar(250) NOT NULL,
   `from_id` varchar(250) NOT NULL,
-  `to_id` varchar(250) NOT NULL,
+  `room` varchar(250) DEFAULT NULL,
   `text` text NOT NULL,
   `originality` varchar(250) NOT NULL,
-  `attachment` varchar(500) NOT NULL,
-  `thumbnail` varchar(500) NOT NULL,
-  `original_id` varchar(250) NOT NULL,
+  `attachment` varchar(500) DEFAULT NULL,
+  `thumbnail` varchar(500) DEFAULT NULL,
+  `original_id` varchar(250) DEFAULT NULL,
   `send_time` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -48,9 +62,9 @@ CREATE TABLE `message` (
 
 CREATE TABLE `room` (
   `id` varchar(250) NOT NULL,
-  `is_group` tinyint(1) NOT NULL,
-  `name` varchar(250) NOT NULL,
-  `avatar` varchar(250) NOT NULL
+  `is_group` tinyint(1) NOT NULL DEFAULT 0,
+  `name` varchar(250) DEFAULT NULL,
+  `avatar` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
