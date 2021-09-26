@@ -40,11 +40,20 @@ public class PersonalEventsPublishAuthorizer extends BaseChatAuthorize {
 
             MyBatis.createRoomWithMembers(room, userIds);
 
-            List<ContactChat> receiverContacts = MyBatis.getUserContacts(receiverId);
-            List<ContactChat> userContacts = MyBatis.getUserContacts(userId);
 
-            ChatClient.connectAndPublish(JsonParser.toJson(receiverContacts), "archivesrooms/" + receiverId);
-            ChatClient.connectAndPublish(JsonParser.toJson(userContacts), "archivesrooms/" + userId);
+
+            new Thread(()->{
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<ContactChat> receiverContacts = MyBatis.getUserContacts(receiverId);
+                List<ContactChat> userContacts = MyBatis.getUserContacts(userId);
+                ChatClient.connectAndPublish(JsonParser.toJson(receiverContacts), "archivesrooms/" + receiverId);
+                ChatClient.connectAndPublish(JsonParser.toJson(userContacts), "archivesrooms/" + userId);
+            }).start();
+
         } else if (bm.getType() == MessageType.EventInvitationResponseReject) {
             //update invitation state
             MyBatis.updateInvitationState(bm.getId(), "rejected");
