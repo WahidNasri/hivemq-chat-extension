@@ -12,6 +12,7 @@ public interface UserMapper {
     @Select("SELECT count(*) FROM room_membership WHERE room_id = #{roomId} AND user_id = #{userId}")
     int getMembershipCount(@Param("userId") String userId, @Param("roomId") String roomId);
 
+    //FIXME: fix this query, returns duplication and wrong data (for example: members of the same group are returned as contacts)
     @Select("SELECT DISTINCT\n" +
             "    u.id,\n" +
             "    m.room_id roomId,\n" +
@@ -34,7 +35,22 @@ public interface UserMapper {
             "        room_membership m\n" +
             "    WHERE\n" +
             "        m.user_id = #{userId}\n" +
-            ") AND u.id <> #{userId}")
+            ") AND u.id <> #{userId} AND r.is_group = 0\n" +
+            "UNION ALL\n" +
+            "SELECT\n" +
+            "    r.id id,\n" +
+            "    r.id roomId,\n" +
+            "    r.name firstName,\n" +
+            "    '' lastName,\n" +
+            "    '' email,\n" +
+            "    r.avatar avatar,\n" +
+            "    r.is_group isGroup\n" +
+            "FROM\n" +
+            "    `room_membership` m\n" +
+            "JOIN room r ON\n" +
+            "    m.room_id = r.id\n" +
+            "WHERE\n" +
+            "    r.is_group = 1 AND user_id = #{userId};")
     List<ContactChat> getUserContacts(@Param("userId") String userId);
 
     @Select("SELECT id, first_name firstName, last_name lastName, avatar FROM user where id = #{userId}")

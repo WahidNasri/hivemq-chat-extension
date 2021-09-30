@@ -4,7 +4,7 @@ public class Room {
     private String id;
     private String name;
     private String avatar;
-    private boolean isGroup;
+    private boolean is_group;
 
     public String getId() {
         return id;
@@ -31,10 +31,10 @@ public class Room {
     }
 
     public boolean isGroup() {
-        return isGroup;
+        return is_group;
     }
 
     public void setGroup(boolean group) {
-        isGroup = group;
+        is_group = group;
     }
 }

@@ -1,11 +1,14 @@
 package com.models;
 
 
+import java.util.List;
+
 public class BaseMessage {
     private String id;
     private MessageType type;
     private String fromId;
     private String fromName;
+    private List<String> additionalFields;
 
     public String getId() {
         return id;
@@ -37,5 +40,13 @@ public class BaseMessage {
 
     public void setFromName(String fromName) {
         this.fromName = fromName;
+    }
+
+    public List<String> getAdditionalFields() {
+        return additionalFields;
+    }
+
+    public void setAdditionalFields(List<String> additionalFields) {
+        this.additionalFields = additionalFields;
     }
 }

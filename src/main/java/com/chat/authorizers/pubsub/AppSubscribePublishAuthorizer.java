@@ -25,14 +25,11 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
     @Override
     public void authorizeSubscribe(@NotNull SubscriptionAuthorizerInput input, @NotNull SubscriptionAuthorizerOutput output) {
         String clientId = input.getClientInformation().getClientId();
-        log.info(">>authorizeSubscribe: Client ID = " + clientId);
-
         String topicFilter = input.getSubscription().getTopicFilter();
-        log.info(">>authorizeSubscribe: topic Filter = " + topicFilter);
 
         try {
             final String userId = MyBatis.getUserIdBySessionId(clientId);
-            log.info(">>authorizeSubscribe: User ID = " + userId);
+            log.info(">>authorizeSubscribe: Client ID = " + clientId + " | Topic = " + topicFilter + " | User ID = " + userId);
 
             BaseChatAuthorize authorizer = null;
             //===== Handle archivesrooms/<clientId>. ==> Allow and publish contacts and groups to the topic
@@ -44,7 +41,6 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
             }
             else if(topicFilter.toLowerCase().startsWith("archivesmyid/")){
                 authorizer = new ArchiveIdSubscribeAuthorizer(topicFilter, clientId, userId);
-
             }
             //==== Handle messages/<roomId> and events/<roomId>, only members can subscribe
             else if (topicFilter.toLowerCase().startsWith("messages/") || topicFilter.toLowerCase().startsWith("events/")) {
@@ -59,20 +55,31 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
 
                 authorizer = new JustAllowAuthorizer(topicFilter, clientId, userId);
             }
+            //============= MUC =============//
+            else if(topicFilter.startsWith("muc/")){
+                //TODO: Handle permissions
+                authorizer = new JustAllowAuthorizer(topicFilter, clientId, userId);
+            }
 
             if(authorizer != null) {
                 Result result = authorizer.authorize();
                 switch (result) {
                     case AUTHORIZE:
                         output.authorizeSuccessfully();
+                        log.info("AUTHORIZED");
                         break;
                     case REJECT:
                         output.failAuthorization();
+                        log.info("REJECTED");
                         break;
                     case NEXT:
                         //output.nextExtensionOrDefault();
+                        log.info("NEXT");
                         break;
                 }
+            }
+            else{
+                log.info("No Authorizer found");
             }
         }catch (Exception e){
             log.info("XXXX");
@@ -89,11 +96,9 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
             final String clientId = input.getClientInformation().getClientId();
             final String topic = publishPacket.getTopic();
             final String payload = JsonParser.byteBufferToString(publishPacket.getPayload().get(), StandardCharsets.UTF_8);
-            log.info(">>authorizePublish: Client ID = " + clientId);
-
             final String userId = MyBatis.getUserIdBySessionId(clientId);
-            log.info(">>authorizePublish: User ID = " + userId);
-            log.info(">>authorizePublish: Topic = " + publishPacket.getTopic());
+
+            log.info(">>authorizePublish: Client ID = " + clientId + " | Topic = " + topic + " | User ID = " + userId);
 
             BaseChatAuthorize authorizer = null;
             //allow lastwills
@@ -128,21 +133,30 @@ public class AppSubscribePublishAuthorizer implements SubscriptionAuthorizer, Pu
 
             }
 
+            //============= MUC =============//
+            else if(topic.startsWith("muc/")){
+                authorizer = new MucPublishAuthorizer(topic, clientId, userId, payload);
+            }
+
             if(authorizer != null){
                 Result result = authorizer.authorize();
                 switch (result){
                     case AUTHORIZE:
                         output.authorizeSuccessfully();
+                        log.info("AUTHORIZED");
                         break;
                     case REJECT:
                         output.failAuthorization();
+                        log.info("REJECTED");
                         break;
                     case NEXT:
                         //output.nextExtensionOrDefault();
+                        log.info("NEXT");
                         break;
                 }
             }
             else {
+                log.info("No Authorizer found");
                 //output.nextExtensionOrDefault();
             }
         }catch (Exception e){

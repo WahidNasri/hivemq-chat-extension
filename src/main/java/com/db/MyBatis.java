@@ -1,6 +1,5 @@
 package com.db;
 
-import com.models.ChatMessage;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -81,7 +80,16 @@ public class MyBatis {
             return null;
         }
     }
-    public static String getRoomIdThatContainUsers(List<String> userIds){
+    public static Room getRoomById(String roomId){
+        try(SqlSession sqlSession = getSession().openSession()){
+            RoomMapper mapper = sqlSession.getMapper(RoomMapper.class);
+            return mapper.getRoomById(roomId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static List<String> getRoomsIdThatContainUsers(List<String> userIds){
         try(SqlSession sqlSession = getSession().openSession()){
             RoomMapper mapper = sqlSession.getMapper(RoomMapper.class);
             //String listParam = "(" + String.join(",", userIds) + ")";
@@ -89,10 +97,10 @@ public class MyBatis {
             itemsArray = userIds.toArray(itemsArray);
 
             String idsStr = String.join(",", itemsArray);
-            return mapper.getRoomContainUsers(userIds);
+            return mapper.getRoomsContainUsers(userIds);
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return new LinkedList<>();
         }
     }
     public static ContactChat getUserByID(String userId){
@@ -158,8 +166,12 @@ public class MyBatis {
     public static void  createRoomWithMembers(Room room, List<String> userIds){
         try(SqlSession sqlSession = getSession().openSession()){
             RoomMapper mapper = sqlSession.getMapper(RoomMapper.class);
-            mapper.createPrivateRoom(room);
-
+            if(room.isGroup()){
+                mapper.createGroupRoom(room);
+            }
+            else {
+                mapper.createPrivateRoom(room);
+            }
             for (String userId : userIds){
                 mapper.createRoomMemberShip(room.getId(), userId);
             }

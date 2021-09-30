@@ -40,5 +40,18 @@ public enum MessageType {
     ChatMarker,
 
     @SerializedName("Typing")
-    Typing
+    Typing,
+
+    @SerializedName("CreateGroup")
+    CreateGroup,
+
+    @SerializedName("RemoveGroup")
+    RemoveGroup,
+
+    @SerializedName("AddUsersToGroup")
+    AddUsersToGroup,
+
+    @SerializedName("RemoveGroupMembers")
+    RemoveGroupMembers
+
 }
