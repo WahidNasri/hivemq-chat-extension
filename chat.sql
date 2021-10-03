@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2021 at 11:53 PM
+-- Generation Time: Oct 03, 2021 at 12:01 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -106,6 +106,15 @@ CREATE TABLE `user` (
   `avatar` text DEFAULT NULL,
   `password` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `email`, `first_name`, `last_name`, `avatar`, `password`) VALUES
+('1111111', 'john@test.com', 'John', 'Doe', 'https://img.freepik.com/free-photo/pleased-handsome-businessman-pointing-person-making-good-point-nice-job-praising-employee-saying-well-done_176420-21751.jpg?size=626&ext=jpg&ga=GA1.2.2107986711.1630540800', '123'),
+('nasri1234', 'nasri@test.com', 'Nilson', 'Smith', 'https://www.jamsadr.com/images/neutrals/person-donald-900x1080.jpg', '123'),
+('wahid1234', 'wahid@test.com', 'Wali', 'Watson', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK9gqFKRn28xKHD1CAbEevdzsLmsv5yQkGnQ&usqp=CAU', '123');
 
 --
 -- Indexes for dumped tables
