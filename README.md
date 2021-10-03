@@ -1,10 +1,33 @@
 ## This Extension defines the topic rules and the messages formats to use HiveMQ as a chat server.
 
+# How to use
+## 1. Install HiveMQ on your machine or Docker.
+Please refer to their [documentation](https://github.com/hivemq/hivemq-community-edition).
+
+## 2. Install Chat Extension
+Extract the [Chat Extension Build](ChatExtension-1.0-SNAPSHOT-distribution.zip).
+
+Move the Folder ChatExtension folder under the extensions folder of your HiveMQ instance.
+
+## 3. Import the database schema
+On your database server, import the schema from [Chat.sql](chat.sql).
+## 4. Specify your database url and credentials on the Environment variables
+To be able to run the extension, we have to define four environment variables:
+1. chat_db_driver: the database driver (example: com.mysql.jdbc.Driver)
+2. chat_db_url: The url of your database (example: jdbc:mysql://localhost:3306/chat)
+3. chat_db_username: username of the database
+4. chat_db_password: password for the database
+
+## 5. Create test users on your database
+To be able to test the application, please insert some users on the table user.
+
+
 ## Features:
 - Login
-- Get Contacts
-- Join a conversation room
-- Messaging
+- Get Archives on login (list of rooms [groups and contacts] and user information)
+- Send invitation to a user
+- Create group chat with members.
+- Messaging (Text, and file messages)
 - Chat Markers
 - Presence
 
@@ -14,18 +37,8 @@ To define Database information, please edit the file [mybatis-config.xml](src/ma
 To change the way the users log in, implement your logic inside [MyAuthenticationProvider.java](src/main/java/com/chat/authorizers/authentication/MyAuthenticatorProvider.java).
 
 ## The Supreme User
-After a successful login, the user will need some information from the server (Like list of contacts and groups, his profile, messages archives if implemented). 
+After a successful login, the user will need some information from the server (Like list of contacts and groups, his profile, messages archives if implemented).
 Those information are published by a special user (called supreme user), he is responsible to send retained messages to specific topics.
-
-## Topics
-| topic         | Who can subscribe           | Who can publish  |
-| :------------------ |:------------------| :---------------|
-| messages/[room id]      | User that exists and member of the room | User that exists and member of the room |
-| filemessages/[room id] | User that exists and member of the room | User that exists and member of the room |
-| events/[room id]      | User that exists and member of the room      |   User that exists and member of the room. for chat marker, the message owner cannot publish |
-| presence/[user id] | Check if the specified user id is a contact of the subscription requester      |    only the owner of the specified id |
-| personalevents/[user id] | only the owner of the specified user id | 
-| invitations/[username] | No one can subscribe to this topic | Logged in users, it is used to search and invite a user to a chat
 
 # Use cases
 ## Invitations
@@ -35,19 +48,9 @@ To be able to send an invitation, the user shoudl send this payload to "invitati
 ### 2. Receiving an invitation
 ### 3. Error about the invitation
 If there is any error, the user should receive on "personalevents/{userId}" this payload, the id is the same of the sent invitation:
-```json
-{
-   "id":"e2ea206e-0d77-4629-8be0-fb85028669a1",
-   "type":"EventInvitationResponseReject",
-   "fromId":"supreme_",
-   "sendTime":0,
-   "text":"User not found",
-   "invitationMessageType":"ERROR"
-}
-```
 
 ### 4. Info about the invitation
-#### 4.1 Receiving room details 
+#### 4.1 Receiving room details
 
 ## Messaging
 ### 1. Send text message
