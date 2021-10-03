@@ -24,7 +24,7 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.junit5.HiveMQTestContainerExtension;
-import com.chat.interceptors.HelloWorldInterceptor;
+import com.chat.interceptors.GlobalChatInterceptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -35,13 +35,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * This tests the functionality of the {@link HelloWorldInterceptor}.
+ * This tests the functionality of the {@link GlobalChatInterceptor}.
  * It uses the HiveMQ Testcontainer to automatically package and deploy this extension inside a HiveMQ docker container.
  *
  * @author Yannick Weber
  * @since 4.3.1
  */
-class HelloWorldInterceptorIT {
+class GlobalChatInterceptorIT {
 
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =

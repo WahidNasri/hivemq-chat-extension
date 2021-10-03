@@ -25,8 +25,8 @@ import com.hivemq.extension.sdk.api.parameter.*;
 import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.InitializerRegistry;
 import com.chat.authorizers.pubsub.AppSubscribePublishAuthorizer;
-import com.chat.interceptors.HelloWorldInterceptor;
-import com.chat.listeners.HelloWorldListener;
+import com.chat.interceptors.GlobalChatInterceptor;
+import com.chat.listeners.GlobalChatListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,18 +73,18 @@ public class ChatExtensionEntry implements ExtensionMain {
 
         final EventRegistry eventRegistry = Services.eventRegistry();
 
-        final HelloWorldListener helloWorldListener = new HelloWorldListener();
+        final GlobalChatListener globalChatListener = new GlobalChatListener();
 
-        eventRegistry.setClientLifecycleEventListener(input -> helloWorldListener);
+        eventRegistry.setClientLifecycleEventListener(input -> globalChatListener);
 
     }
     private void addPublishModifier() {
         final InitializerRegistry initializerRegistry = Services.initializerRegistry();
 
-        final HelloWorldInterceptor helloWorldInterceptor = new HelloWorldInterceptor();
+        final GlobalChatInterceptor globalChatInterceptor = new GlobalChatInterceptor();
 
         initializerRegistry.setClientInitializer((initializerInput, clientContext) -> {
-            clientContext.addPublishInboundInterceptor(helloWorldInterceptor);
+            clientContext.addPublishInboundInterceptor(globalChatInterceptor);
         });
     }
     private void addSecurityAuthorizers(){

@@ -19,16 +19,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>HiveExtTest</artifactId>
+    <groupId>com.chat</groupId>
+    <artifactId>ChatExtension</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>HiveMQ 4 Hello World Extension - a simple reference for all extension developers</description>
+    <description>Chat Extension to use HiveMQ as Chat Broker.</description>
 
     <properties>
-        <extension.name>Hello World Extension</extension.name>
-        <extension.author>HiveMQ GmbH</extension.author>
-        <asciidoctor.version>1.5.7.1</asciidoctor.version>
+        <extension.name>Chat Extension</extension.name>
+        <extension.author>Wahid Nasri</extension.author>
+        <asciidoctor.version>0.0.1</asciidoctor.version>
         <output.dir>${basedir}</output.dir>
         <source.document.name>README.adoc</source.document.name>
     </properties>

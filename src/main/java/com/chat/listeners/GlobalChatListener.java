@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Florian Limpöck
  * @since 4.0.0
  */
-public class HelloWorldListener implements ClientLifecycleEventListener {
+public class GlobalChatListener implements ClientLifecycleEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(ChatExtensionEntry.class);
 

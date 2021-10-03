@@ -20,7 +20,6 @@ package com.chat.interceptors;
 import com.db.ContactChat;
 import com.db.Message;
 import com.db.MyBatis;
-import com.db.User;
 import com.files.FileSaver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,24 +29,19 @@ import com.hivemq.extension.sdk.api.interceptor.publish.parameter.PublishInbound
 import com.hivemq.extension.sdk.api.interceptor.publish.parameter.PublishInboundOutput;
 import com.hivemq.extension.sdk.api.packets.publish.ModifiablePublishPacket;
 import com.models.ChatMessage;
-import com.models.MessageOriginality;
-import com.models.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.utils.JsonParser;
 
-import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Map;
-import java.util.UUID;
 
 
-public class HelloWorldInterceptor implements PublishInboundInterceptor {
-    private static final Logger log = LoggerFactory.getLogger(HelloWorldInterceptor.class);
+public class GlobalChatInterceptor implements PublishInboundInterceptor {
+    private static final Logger log = LoggerFactory.getLogger(GlobalChatInterceptor.class);
 
     @Override
     public void onInboundPublish(final @NotNull PublishInboundInput publishInboundInput, final @NotNull PublishInboundOutput publishInboundOutput) {
