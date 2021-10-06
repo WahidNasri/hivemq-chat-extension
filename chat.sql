@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2021 at 10:33 AM
+-- Generation Time: Oct 06, 2021 at 11:01 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -88,7 +88,6 @@ CREATE TABLE `room_membership` (
 CREATE TABLE `session` (
   `id` text NOT NULL,
   `user_id` text NOT NULL,
-  `is_active` tinyint(1) NOT NULL,
   `last_presence` datetime NOT NULL DEFAULT current_timestamp(),
   `presence` varchar(250) NOT NULL DEFAULT 'Available',
   `last_update` datetime NOT NULL DEFAULT current_timestamp()
