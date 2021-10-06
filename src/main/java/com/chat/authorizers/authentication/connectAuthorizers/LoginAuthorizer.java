@@ -23,7 +23,7 @@ public class LoginAuthorizer extends BaseConnectAuthorizer {
             if (dbUser == null) {
                 return Result.REJECT;
             } else {
-                MyBatis.addSession(clientId, dbUser);
+                MyBatis.addOrUpdateSession(clientId, dbUser, "Available");
 
                 sendRoomsArchives(dbUser);
                 sendIdArchives(dbUser);
@@ -39,6 +39,9 @@ public class LoginAuthorizer extends BaseConnectAuthorizer {
         Thread publish = new Thread(() -> {
             //fetch groups and contacts then publish them to the topic
             List<ContactChat> chats = MyBatis.getUserContacts(user.getId());
+            for(ContactChat chat : chats){
+                chat.setPresence(MyBatis.getLastPresenceByUserId(chat.getId()));
+            }
             String payload = JsonParser.toJson(chats);
 
             String roomsTopic = "archivesrooms/" + clientId;

@@ -1,7 +1,7 @@
 package com.db;
 
 public class ContactChat {
-    private String firstName, lastName, id, avatar, roomId;
+    private String firstName, lastName, id, avatar, roomId, presence;
     boolean isGroup;
 
     public String getFirstName() {
@@ -50,5 +50,13 @@ public class ContactChat {
 
     public void setGroup(boolean group) {
         isGroup = group;
+    }
+
+    public String getPresence() {
+        return presence;
+    }
+
+    public void setPresence(String presence) {
+        this.presence = presence;
     }
 }

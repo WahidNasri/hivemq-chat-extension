@@ -9,13 +9,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 public class MyBatis {
+    private static Properties getProperties(){
+        Properties properties = new Properties();
+
+        properties.put("chat_db_driver", System.getenv().get("chat_db_driver"));
+        properties.put("chat_db_url", System.getenv().get("chat_db_url"));
+        properties.put("chat_db_username", System.getenv().get("chat_db_username"));
+        properties.put("chat_db_password", System.getenv().get("chat_db_password"));
+
+        return properties;
+    }
     public static SqlSessionFactory getSession() throws IOException {
             String resource = "mybatis-config.xml";
             InputStream inputStream = Resources.getResourceAsStream(resource);
             SqlSessionFactory sqlSessionFactory =
-                    new SqlSessionFactoryBuilder().build(inputStream);
+                    new SqlSessionFactoryBuilder().build(inputStream, getProperties());
 
             return sqlSessionFactory;
     }
@@ -31,10 +42,10 @@ public class MyBatis {
         }
     }
 
-    public static void addSession(String clientId, User user){
+    public static void addOrUpdateSession(String clientId, User user, String presence){
         try(SqlSession sqlSession = getSession().openSession()){
             SessionMapper mapper = sqlSession.getMapper(SessionMapper.class);
-            mapper.addSession(clientId, user.getId());
+            mapper.addOrUpdateSession(clientId, user.getId(), presence);
 
             sqlSession.commit();
         } catch (IOException e) {
@@ -179,6 +190,16 @@ public class MyBatis {
             sqlSession.commit();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static String getLastPresenceByUserId(String userId){
+        try(SqlSession sqlSession = getSession().openSession()){
+            SessionMapper mapper = sqlSession.getMapper(SessionMapper.class);
+            return mapper.getLAstPresenceInfo(userId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2021 at 12:01 PM
+-- Generation Time: Oct 06, 2021 at 10:33 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -89,7 +89,9 @@ CREATE TABLE `session` (
   `id` text NOT NULL,
   `user_id` text NOT NULL,
   `is_active` tinyint(1) NOT NULL,
-  `last_presence` datetime NOT NULL DEFAULT current_timestamp()
+  `last_presence` datetime NOT NULL DEFAULT current_timestamp(),
+  `presence` varchar(250) NOT NULL DEFAULT 'Available',
+  `last_update` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -131,6 +133,12 @@ ALTER TABLE `message`
 --
 ALTER TABLE `room`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `session`
+--
+ALTER TABLE `session`
+  ADD UNIQUE KEY `unique_id_user_id` (`id`,`user_id`) USING HASH;
 
 --
 -- Indexes for table `user`
