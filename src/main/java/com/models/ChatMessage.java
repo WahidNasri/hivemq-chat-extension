@@ -1,6 +1,8 @@
 package com.models;
 
 
+import java.util.List;
+
 public class ChatMessage extends BaseMessage {
     private String toId;
     private String toName;
@@ -13,6 +15,7 @@ public class ChatMessage extends BaseMessage {
     private MessageOriginality originality;
     private long size;
     private String mime;
+    private long sendTime;
 
     public String getToId() {
         return toId;
@@ -100,5 +103,13 @@ public class ChatMessage extends BaseMessage {
 
     public void setMime(String mime) {
         this.mime = mime;
+    }
+
+    public long getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(long sendTime) {
+        this.sendTime = sendTime;
     }
 }

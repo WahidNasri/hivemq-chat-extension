@@ -95,19 +95,25 @@ public class Message {
         return room;
     }
 
-    public static Message fromClientMap(Map<String, String> map){
+    public static Message fromClientMap(Map<String, Object> map){
         Message message = new Message();
 
-        message.setId(map.get("id"));
-        message.setType(map.get("type"));
-        message.setFrom_id(map.get("fromId"));
-        message.setText(map.get("text"));
-        message.setOriginality(map.get("originality"));
-        message.setAttachment(map.get("attachment"));
-        message.setThumbnail(map.get("thumbnail"));
-        message.setOriginal_id(map.get("originalId"));
-        message.setSend_time(Long.parseLong(map.get("sendTime")));
-        message.setRoom(map.get("roomId"));
+        message.setId(map.get("id").toString());
+        message.setType(map.get("type").toString());
+        message.setFrom_id(map.get("fromId").toString());
+        message.setText(map.get("text").toString());
+        message.setOriginality(map.get("originality").toString());
+        if(map.get("attachment") != null) {
+            message.setAttachment(map.get("attachment").toString());
+        }
+        if(map.get("thumbnail") != null) {
+            message.setThumbnail(map.get("thumbnail").toString());
+        }
+        if(map.get("originalId") != null) {
+            message.setOriginal_id(map.get("originalId").toString());
+        }
+        message.setSend_time(Long.parseLong(map.get("sendTime").toString()));
+        message.setRoom(map.get("roomId").toString());
 
         return message;
     }

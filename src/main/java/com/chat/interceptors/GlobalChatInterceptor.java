@@ -59,7 +59,7 @@ public class GlobalChatInterceptor implements PublishInboundInterceptor {
             try {
                 Type tp = new TypeToken<Map<String, String>>() {
                 }.getType();
-                Map<String, String> map = new Gson().fromJson(payload, tp);
+                Map<String, Object> map = new Gson().fromJson(payload, tp);
 
                 //add sendTime if not present
                 long now = Instant.now().toEpochMilli();

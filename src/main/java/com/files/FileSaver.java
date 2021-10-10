@@ -9,11 +9,12 @@ import com.utils.JsonParser;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
 
 public class FileSaver {
-    static String myAddress = "http://172.16.14.99/";
+    static String myAddress = "http://172.16.14.99:8080/";
     public static ChatMessage saveAndGetMessageObject(String base64File, String room, String userId){
         String id = UUID.randomUUID().toString();
 
@@ -66,6 +67,7 @@ public class FileSaver {
                 msg.setOriginality(MessageOriginality.Original);
                 msg.setText(fileName);
                 msg.setSize(dest.length());
+                msg.setSendTime(Instant.now().toEpochMilli());
 
                 msg.setMime(mime);
 
