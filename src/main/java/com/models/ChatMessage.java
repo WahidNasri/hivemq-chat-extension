@@ -1,8 +1,5 @@
 package com.models;
 
-
-import java.util.List;
-
 public class ChatMessage extends BaseMessage {
     private String toId;
     private String toName;
@@ -16,6 +13,8 @@ public class ChatMessage extends BaseMessage {
     private long size;
     private String mime;
     private long sendTime;
+    private double longitude;
+    private double latitude;
 
     public String getToId() {
         return toId;
@@ -111,5 +110,21 @@ public class ChatMessage extends BaseMessage {
 
     public void setSendTime(long sendTime) {
         this.sendTime = sendTime;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

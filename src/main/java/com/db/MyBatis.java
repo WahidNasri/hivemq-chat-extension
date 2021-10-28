@@ -12,21 +12,11 @@ import java.util.List;
 import java.util.Properties;
 
 public class MyBatis {
-    private static Properties getProperties(){
-        Properties properties = new Properties();
-
-        properties.put("chat_db_driver", System.getenv().get("chat_db_driver"));
-        properties.put("chat_db_url", System.getenv().get("chat_db_url"));
-        properties.put("chat_db_username", System.getenv().get("chat_db_username"));
-        properties.put("chat_db_password", System.getenv().get("chat_db_password"));
-
-        return properties;
-    }
     public static SqlSessionFactory getSession() throws IOException {
             String resource = "mybatis-config.xml";
             InputStream inputStream = Resources.getResourceAsStream(resource);
             SqlSessionFactory sqlSessionFactory =
-                    new SqlSessionFactoryBuilder().build(inputStream, getProperties());
+                    new SqlSessionFactoryBuilder().build(inputStream);
 
             return sqlSessionFactory;
     }
