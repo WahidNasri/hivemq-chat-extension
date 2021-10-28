@@ -12,11 +12,15 @@ Move the Folder ChatExtension folder under the extensions folder of your HiveMQ 
 ## 3. Import the database schema
 On your database server, import the schema from [Chat.sql](chat.sql).
 ## 4. Specify your database url and credentials on the Environment variables
+### 4.1 Use the Pre-Built version
 To be able to run the extension, we have to define four environment variables:
 1. chat_db_driver: the database driver (example: com.mysql.jdbc.Driver)
 2. chat_db_url: The url of your database (example: jdbc:mysql://localhost:3306/chat)
 3. chat_db_username: username of the database
 4. chat_db_password: password for the database
+
+### 4.2 Build the project
+Before you build the project, please specify your database information on the file [mybatis-config.xml](src/main/resources/mybatis-config.xml)
 
 ## 5. Create test users on your database
 To be able to test the application, please insert some users on the table user.
